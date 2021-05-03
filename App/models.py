@@ -13,6 +13,9 @@ class Project(models.Model):
 
 
 class User(models.Model):
+    # REQUIRED_FIELDS = ('first_name', 'last_name', 'password', 'email')
+    # USERNAME_FIELD =
+
     id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=20, blank=True, null=True)
     last_name = models.CharField(max_length=20, blank=True, null=True)
@@ -68,9 +71,9 @@ class Notification(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     type = models.CharField(max_length=10, blank=True, null=True)
     sent_to = models.ForeignKey(
-        'User', on_delete=models.CASCADE, db_column='sent_to')
+        User, on_delete=models.CASCADE, db_column='sent_to', related_name='notifications')
     sent_by = models.ForeignKey(
-        'User', on_delete=models.SET_NULL, db_column='sent_by', blank=True, null=True)
+        User, on_delete=models.SET_NULL, db_column='sent_by', blank=True, null=True, related_name='sent_notifications')
 
     class Meta:
         managed = False
@@ -91,7 +94,7 @@ class Task(models.Model):
     dependent_on = models.ForeignKey(
         'self', on_delete=models.CASCADE, db_column='dependent_on')
     managed_by = models.ForeignKey(
-        'User', on_delete=models.SET_NULL, db_column='managed_by')
+        'User', on_delete=models.SET_NULL, db_column='managed_by', null=True)
 
     class Meta:
         managed = False
