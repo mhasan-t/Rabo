@@ -28,21 +28,6 @@
       {{ form.non_field_errors }}
       <form action="" method="POST">
         {% csrf_token %}
-        <div class="form-input">
-          {{ form.first_name.errors }}
-          <label class="form-label" for="{{ form.first_name.id_for_label }}"
-            >First Name:</label
-          >
-          {{ form.first_name }}
-        </div>
-
-        <div class="form-input">
-          {{ form.last_name.errors }}
-          <label class="form-label" for="{{ form.last_name.id_for_label }}"
-            >Last Name:</label
-          >
-          {{ form.last_name }}
-        </div>
 
         <div class="form-input">
           {{ form.email.errors }}
@@ -58,16 +43,6 @@
             >Password:</label
           >
           {{ form.password }}
-        </div>
-
-        <div class="form-input">
-          {{ form.confirm_password.errors }}
-          <label
-            class="form-label"
-            for="{{ form.confirm_password.id_for_label }}"
-            >Confirm Password:</label
-          >
-          {{ form.confirm_password }}
         </div>
 
         <div class="form-input">

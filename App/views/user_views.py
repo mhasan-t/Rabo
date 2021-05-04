@@ -1,12 +1,16 @@
 from django.views.generic import View
 from django.shortcuts import render
 from django.db import connection
-import pdb
+from ..forms import CreateUserForm
 
 
 class CreateUser(View):
     def get(self, request):
-        return render(request=request, template_name="user_signup.html")
+        form = CreateUserForm()
+        context_data = {
+            'form': form
+        }
+        return render(request=request, template_name="user_signup.html", context=context_data)
 
     def post(self, request):
 
@@ -23,6 +27,6 @@ class CreateUser(View):
                 "{str(password)}"
             )
         """
-        print(query)
+
         with connection.cursor() as cursor:
             cursor.execute(query)
