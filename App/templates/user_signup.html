@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+    <title>Create New Account</title>
+
+    <style>
+      body {
+        font-family: "Roboto";
+      }
+    </style>
+
+    <script></script>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>Create New Account</h1>
+
+      {{ form.non_field_errors }}
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-input">
+          {{ form.first_name.errors }}
+          <label class="form-label" for="{{ form.first_name.id_for_label }}"
+            >First Name:</label
+          >
+          {{ form.first_name }}
+        </div>
+
+        <div class="form-input">
+          {{ form.last_name.errors }}
+          <label class="form-label" for="{{ form.last_name.id_for_label }}"
+            >Last Name:</label
+          >
+          {{ form.last_name }}
+        </div>
+
+        <div class="form-input">
+          {{ form.email.errors }}
+          <label class="form-label" for="{{ form.email.id_for_label }}"
+            >E-Mail:</label
+          >
+          {{ form.email }}
+        </div>
+
+        <div class="form-input">
+          {{ form.password.errors }}
+          <label class="form-label" for="{{ form.password.id_for_label }}"
+            >Password:</label
+          >
+          {{ form.password }}
+        </div>
+
+        <div class="form-input">
+          {{ form.confirm_password.errors }}
+          <label
+            class="form-label"
+            for="{{ form.confirm_password.id_for_label }}"
+            >Confirm Password:</label
+          >
+          {{ form.confirm_password }}
+        </div>
+
+        <div class="form-input">
+          <input type="submit" id="submitBtn" value="Create New Account" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
