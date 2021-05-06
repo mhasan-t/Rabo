@@ -22,3 +22,10 @@ class CreateUserForm(forms.Form):
             raise forms.ValidationError(
                 "password and confirm_password does not match"
             )
+
+
+class LoginUserForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'placeholder': 'enter your e-mail'}))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'placeholder': 'enter your password'}))
