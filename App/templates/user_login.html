@@ -11,7 +11,7 @@
     />
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
-    <title>Create New Account</title>
+    <title>Log In to your account</title>
 
     <style>
       body {
@@ -23,7 +23,7 @@
   </head>
   <body>
     <div class="form-container">
-      <h1>Create New Account</h1>
+      <h1>Log In</h1>
 
       {{ form.non_field_errors }}
       <form action="" method="POST">
@@ -46,9 +46,12 @@
         </div>
 
         <div class="form-input">
-          <input type="submit" id="submitBtn" value="Create New Account" />
+          <input type="submit" id="submitBtn" value="Log In" />
         </div>
       </form>
+      {% if error_msg %}
+      <div id="error-msg">{{error_msg}}</div>
+      {% endif %}
     </div>
   </body>
 </html>
