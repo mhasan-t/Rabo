@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+
+<body>
+
+    <!-- UNIVERSAL FIXED COMPONENTS -->
+    <div class="project-options">
+        <a href="#">Users</a>
+        <a href="#">Tasks</a>
+        <a href="#">Task Dependencies</a>
+    </div>
+
+    <div class="edit-user-info">
+        {{ userform.non_field_errors }}
+        <form action="{% url 'edit-user' %}" method="POST">
+            <h1>Edit Profile</h1>
+            {% csrf_token %}
+            <div class="form-input">
+                {{ userform.first_name.errors }}
+                <label class="form-label" for="{{ userform.first_name.id_for_label }}">First Name:</label>
+                {{ userform.first_name }}
+            </div>
+
+            <div class="form-input">
+                {{ userform.last_name.errors }}
+                <label class="form-label" for="{{ userform.last_name.id_for_label }}">Last Name:</label>
+                {{ userform.last_name }}
+            </div>
+
+            <div class="form-input">
+                {{ userform.email.errors }}
+                <label class="form-label" for="{{ userform.email.id_for_label }}">E-Mail:</label>
+                {{ userform.email }}
+            </div>
+
+            <div class="form-input">
+                {{ userform.password.errors }}
+                <label class="form-label" for="{{ userform.password.id_for_label }}">Password:</label>
+                {{ userform.password }}
+            </div>
+
+            <div class="form-input">
+                {{ userform.confirm_password.errors }}
+                <label class="form-label" for="{{ userform.confirm_password.id_for_label }}">Confirm Password:</label>
+                {{ userform.confirm_password }}
+            </div>
+
+            <div class="form-input">
+                <input type="submit" id="submitBtn" value="Save Info" />
+            </div>
+        </form>
+    </div>
+
+
+    <!-- SideBar -->
+    <div class="sidebar-container">
+
+        <div class="main-logo">
+            <img src="{% static 'logos/logo.png' %}" alt="Rabo">
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-item noticeboard">
+                <div>
+                    <img src="{% static 'logos/noticeboard.png' %}" alt="Notice Board Logo">
+                    Notice Board
+                </div>
+            </div>
+
+            <div class="create-project sidebar-item">
+                <button id="createProjBtn">
+                    <img src="{% static 'logos/new.png' %}" alt="New Board Logo">
+                    <div>New Board</div>
+                </button>
+            </div>
+            <div class="sidebar-item">
+                <button class="project-btn" onclick="showProjectMenu(event)" id="project1">
+                    ProjectBoardX
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-view-container">
+        <div class="top-bar">
+            <div class="notif">
+                <button><img src="{% static 'logos/notifications.png' %}" alt="Notifications"></button>
+            </div>
+
+            <div class="user-btn">
+                <button onclick="handleUserBtn(event)">
+                    <img src="{% static 'logos/user.png' %}" alt="User Picture"></button>
+            </div>
+
+
+        </div>
+
+        <div class="main-section">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+
+</html>
