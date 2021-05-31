@@ -1,13 +1,24 @@
-from django.http.response import HttpResponse, HttpResponseRedirect
+from decimal import Context
+from typing import cast
+from django.http.request import QueryDict
+from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connection
 from django.urls import reverse
+from django.core.files.storage import default_storage
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.db import IntegrityError
 
+import os
+import pathlib
+import json
 import uuid
 import datetime
 import pytz
 import bcrypt
+import PIL.Image as PilImage
 
 from ..forms import CreateUserForm, LoginUserForm
 from ..utils import login_required
@@ -15,6 +26,23 @@ from ..utils import login_required
 
 class CreateUser(View):
     def get(self, request):
+        sid = request.COOKIES.get('session_id')
+        if sid:
+            query = f'''
+                SELECT user_id FROM sessions
+                WHERE session_id = "{sid}"
+            '''
+        
+            with connection.cursor() as cursor:
+                sid_valid  = cursor.execute(query)
+
+                if sid_valid==1:
+                    return HttpResponseRedirect(reverse('dashboard'))
+                else:
+                    resp = HttpResponseRedirect(reverse('sign-up'))
+                    resp.delete_cookie("session_id")
+                    return resp;
+
         form = CreateUserForm()
         context_data = {
             'form': form
@@ -43,9 +71,18 @@ class CreateUser(View):
                     "{str(created_dt.strftime('%Y:%m:%d %H:%M:%S'))}"
                 )
             """
-            print(query)
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                try:
+                    res = cursor.execute(query)
+                except IntegrityError as e:
+                    context_data = {
+                        'form': form,
+                        'error_msg': "E-mail already exists!"
+                    }
+                    return render(request=request, template_name="user_signup.html", context=context_data)
+                return redirect('log-in')
+
+
         else:
             form = CreateUserForm()
             context_data = {
@@ -57,6 +94,23 @@ class CreateUser(View):
 
 class LoginUser(View):
     def get(self, request):
+        sid = request.COOKIES.get('session_id')
+        if sid:
+            query = f'''
+                SELECT user_id FROM sessions
+                WHERE session_id = "{sid}"
+            '''
+        
+            with connection.cursor() as cursor:
+                sid_valid  = cursor.execute(query)
+
+                if sid_valid==1:
+                    return HttpResponseRedirect(reverse('dashboard'))
+                else:
+                    resp = HttpResponseRedirect(reverse('log-in'))
+                    resp.delete_cookie("session_id")
+                    return resp;
+
         form = LoginUserForm()
         context_data = {
             'form': form
@@ -106,29 +160,82 @@ class LoginUser(View):
 
 
 class EditUser(View):
-    def post(self, request):
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        email = request.POST.get("email")
-        password = request.POST.get("password").encode('utf-8')
-        hashed_pass = bcrypt.hashpw(password, bcrypt.gensalt())
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            query = f"""
-                INSERT INTO user(first_name, last_name, email, password) VALUES(
-                    "{str(first_name)}" ,
-                    "{str(last_name)}" ,
-                    "{str(email)}",
-                    "{hashed_pass.decode('utf-8')}"
-                )
-            """
-            print(query)
-            with connection.cursor() as cursor:
-                cursor.execute(query)
-        else:
-            form = CreateUserForm()
-            context_data = {
-                'error_msg': 'Password does not match.',
-                'form': form
-            }
-            return render(request=request, template_name="user_signup.html", context=context_data)
+    @login_required
+    def post(self, request, user_id):
+        # post_data = json.loads(request.body.decode("utf-8"))
+        # field = post_data.get('field')
+        # data = post_data.get('data')
+
+        field = request.POST.get('field')
+        data = request.POST.get('data')
+
+        if(data==""):
+            return HttpResponse()
+        
+        if field=="picture":
+            image_file = request.FILES.get("pic")
+            path = default_storage.save("profile_pics/picture.jpeg", ContentFile(image_file.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+            data = tmp_file.split("/")[1]
+
+
+        if field=="password":
+            data = bcrypt.hashpw(data.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+
+        query = f'''
+            UPDATE user
+            SET {field}="{data}"
+            WHERE id={user_id}
+        '''
+        
+        with connection.cursor() as cursor:
+            res = cursor.execute(query)
+            if res and field=="picture":
+                return HttpResponse(reverse("dashboard"))
+            if res:
+                return HttpResponse(status=200)
+        
+        return HttpResponse(status=500)
+
+
+class DeleteUser(View):
+    @login_required
+    def post(self, request, user_id):
+        query = f'''
+            DELETE FROM user
+            WHERE id = {user_id}
+        '''
+
+        with connection.cursor() as cursor:
+            res = cursor.execute(query)
+            if res:
+                return HttpResponse(status=200)
+        
+        return HttpResponse(status=500)
+
+class SearchUser(View):
+    def get(self, request):
+        searchQ = request.GET.get("query")
+
+        query = f'''
+            SELECT first_name, last_name FROM user
+            WHERE first_name LIKE "%{searchQ}%"
+                OR last_name LIKE "%{searchQ}%"
+        '''
+
+        with connection.cursor() as cursor:
+            res = cursor.execute(query)
+
+            desc = cursor.description 
+
+            resDict = [dict(zip([col[0] for col in desc], row)) 
+                for row in cursor.fetchall() ]
+
+
+            json_data = json.dumps(resDict)
+
+            if res:
+                return HttpResponse(json_data, content_type="application/json")
+        
+        return HttpResponse(status=500)

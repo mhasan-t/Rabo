@@ -5,6 +5,18 @@
   list-style-type: none;
 }
 
+a {
+  text-decoration: underline;
+  color: rgb(133, 133, 133);
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
 .form-container {
   background-color: rgb(241, 241, 241);
   height: 100vh;

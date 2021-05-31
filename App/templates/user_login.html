@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
-    <title>Log In to your account</title>
 
-    <style>
-      body {
-        font-family: "Roboto";
-      }
-    </style>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet" />
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+  <title>Log In to your account</title>
 
-    <script></script>
-  </head>
-  <body>
-    <div class="form-container">
-      <h1>Log In</h1>
+  <style>
+    body {
+      font-family: "Roboto";
+    }
+  </style>
 
-      {{ form.non_field_errors }}
-      <form action="" method="POST">
-        {% csrf_token %}
+  <script></script>
+</head>
 
-        <div class="form-input">
-          {{ form.email.errors }}
-          <label class="form-label" for="{{ form.email.id_for_label }}"
-            >E-Mail:</label
-          >
-          {{ form.email }}
-        </div>
+<body>
+  <div class="form-container">
+    <h1>Log In</h1>
 
-        <div class="form-input">
-          {{ form.password.errors }}
-          <label class="form-label" for="{{ form.password.id_for_label }}"
-            >Password:</label
-          >
-          {{ form.password }}
-        </div>
+    {{ form.non_field_errors }}
+    <form action="" method="POST">
+      {% csrf_token %}
 
-        <div class="form-input">
-          <input type="submit" id="submitBtn" value="Log In" />
-        </div>
-      </form>
-      {% if error_msg %}
-      <div id="error-msg">{{error_msg}}</div>
-      {% endif %}
-    </div>
-  </body>
+      <div class="form-input">
+        {{ form.email.errors }}
+        <label class="form-label" for="{{ form.email.id_for_label }}">E-Mail:</label>
+        {{ form.email }}
+      </div>
+
+      <div class="form-input">
+        {{ form.password.errors }}
+        <label class="form-label" for="{{ form.password.id_for_label }}">Password:</label>
+        {{ form.password }}
+      </div>
+
+      <div class="form-input">
+        <input type="submit" id="submitBtn" value="Log In" />
+      </div>
+    </form>
+
+    <button><a href="/signup">Create New Account</a></button>
+
+    {% if error_msg %}
+    <div id="error-msg">{{error_msg}}</div>
+    {% endif %}
+  </div>
+</body>
+
 </html>

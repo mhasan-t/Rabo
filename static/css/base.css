@@ -33,6 +33,7 @@ button {
   border: none;
   outline: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 /* SIDE BAR */
@@ -208,7 +209,8 @@ button {
 }
 
 .notif,
-.user-btn {
+.user-btn,
+#logout-btn {
   padding: 3px;
   margin: 10px;
   border: 2px solid #078dff;
@@ -230,7 +232,7 @@ button {
 
 .notif {
   position: absolute;
-  right: 55px;
+  right: 105px;
 }
 
 .notif * {
@@ -239,7 +241,7 @@ button {
 
 .user-btn {
   position: absolute;
-  right: 0px;
+  right: 50px;
 }
 
 .user-btn * {
@@ -250,12 +252,12 @@ button {
   display: none;
   position: fixed;
   width: 400px;
-  height: 600px;
+  height: 700px;
   border: 1px solid rgb(90, 196, 245);
   z-index: 2;
 
   left: 40vw;
-  top: 50px;
+  top: 30px;
 }
 
 .edit-user-info form h1 {
@@ -287,6 +289,14 @@ button {
   width: 90%;
 }
 
+.image-container {
+  flex-direction: row;
+}
+
+.image-container:nth-child(1) {
+  margin-top: 10px;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"] {
@@ -316,9 +326,10 @@ label {
   font-size: 10px;
 }
 
-#submitBtn {
+.submitBtn {
+  display: none;
   height: 35px;
-  width: 30vw;
+  width: 70px;
   max-width: 350px;
   margin-top: 5px;
 
@@ -336,8 +347,129 @@ label {
   -o-border-radius: 3px;
 }
 
-#submitBtn:hover,
-#submitBtn:focus {
+.submitBtn:hover,
+.submitBtn:focus,
+.uploadBtn:hover,
+.uploadBtn:focus {
   background-color: #2e93c2;
   box-shadow: 0px 1px 2px 1px #b3bfc3;
+}
+
+.form-input .input {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.editbtn {
+  height: 20px;
+}
+
+#editUserErrMsg {
+  text-decoration: underline;
+  font-size: 11px;
+}
+
+.uploadBtn {
+  height: 35px;
+  width: 70px;
+  max-width: 350px;
+  margin-top: 5px;
+
+  background-color: rgb(115, 205, 246);
+  color: white;
+  font-size: 15px;
+  font-weight: 100;
+  cursor: pointer;
+
+  border: none;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+.pPic {
+  height: 100px;
+  width: 100px;
+}
+
+#cngPass {
+  display: none;
+}
+
+#cngPassBtn {
+  display: block;
+  height: 35px;
+  width: 170px;
+  max-width: 350px;
+  margin-top: 5px;
+
+  background-color: rgb(115, 205, 246);
+  color: white;
+  font-size: 15px;
+  font-weight: 100;
+  cursor: pointer;
+
+  border: none;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+#logout-btn {
+  position: absolute;
+  right: 0px;
+}
+
+#delUserBtn {
+  display: block;
+  height: 35px;
+  width: 170px;
+  max-width: 350px;
+  margin-top: 5px;
+
+  background-color: rgb(255, 0, 0);
+  color: white;
+  font-size: 15px;
+  font-weight: 100;
+  cursor: pointer;
+
+  border: none;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+}
+
+#searchUser {
+  position: absolute;
+  right: 200px;
+  top: 10px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#searchRes {
+  border: 1px solid rgb(115, 205, 246);
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: #005096;
+
+  display: none;
+}
+
+#searchRes>div {
+  padding: 7px;
+  font-size: 12px;
+  color: white;
+  border-bottom: 1px solid #078dff;
 }
