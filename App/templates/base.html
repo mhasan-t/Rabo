@@ -26,44 +26,87 @@
         <a href="#">Task Dependencies</a>
     </div>
 
+
+
     <div class="edit-user-info">
-        {{ userform.non_field_errors }}
-        <form action="{% url 'edit-user' %}" method="POST">
-            <h1>Edit Profile</h1>
+        <form onsubmit="return false;">
             {% csrf_token %}
+            <h1>Edit Profile</h1>
             <div class="form-input">
-                {{ userform.first_name.errors }}
-                <label class="form-label" for="{{ userform.first_name.id_for_label }}">First Name:</label>
-                {{ userform.first_name }}
+                <label class="form-label" for="id_first_name">First Name:</label>
+                <div class="input">
+                    <input type="text" name="first_name" placeholder="enter your first name" maxlength="20" required=""
+                        id="id_first_name" value="{{user_data.1}}" disabled>
+
+                    <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
+                        src="{% static 'logos/edit.png' %}">
+                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                </div>
             </div>
 
             <div class="form-input">
-                {{ userform.last_name.errors }}
-                <label class="form-label" for="{{ userform.last_name.id_for_label }}">Last Name:</label>
-                {{ userform.last_name }}
+
+                <label class="form-label" for="id_last_name">Last Name:</label>
+                <div class="input">
+                    <input type="text" name="last_name" placeholder="enter your last name" maxlength="20" required=""
+                        id="id_last_name" value="{{user_data.2}}" disabled>
+                    <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
+                        src="{% static 'logos/edit.png' %}">
+                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                </div>
             </div>
 
             <div class="form-input">
-                {{ userform.email.errors }}
-                <label class="form-label" for="{{ userform.email.id_for_label }}">E-Mail:</label>
-                {{ userform.email }}
+
+                <label class="form-label" for="id_email">E-Mail:</label>
+                <div class="input">
+                    <input type="email" name="email" placeholder="enter your e-mail" required="" id="id_email"
+                        value="{{user_data.4}}" disabled>
+                    <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
+                        src="{% static 'logos/edit.png' %}">
+                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                </div>
             </div>
 
             <div class="form-input">
-                {{ userform.password.errors }}
-                <label class="form-label" for="{{ userform.password.id_for_label }}">Password:</label>
-                {{ userform.password }}
+
+                <label class="form-label" for="id_bio">Bio:</label>
+                <div class="input">
+                    <input type="text" name="bio" placeholder="enter your bio" required="" id="id_bio"
+                        value="{{user_data.6}}" disabled>
+                    <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
+                        src="{% static 'logos/edit.png' %}">
+                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                </div>
+            </div>
+
+            <div class="form-input image-container-wrapper">
+                <label class="form-label" for="image-container">Profile Picture:</label>
+
+                <div id="image-container">
+                    <img class="pPic" src="/media/profile_pics/{{user_data.5}}" alt="Profile Picture">
+                    <div>
+                        <input type="file" name="picture" accept="image/*" required="" id="id_picture">
+                        <button type="button" class="uploadBtn" onclick="handlePictureUpload(event)">Upload</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-input">
-                {{ userform.confirm_password.errors }}
-                <label class="form-label" for="{{ userform.confirm_password.id_for_label }}">Confirm Password:</label>
-                {{ userform.confirm_password }}
+                <button id='cngPassBtn' type='button' onclick="handleChangePass(event)">Change Password</button>
+            </div>
+
+            <div class="form-input" id="cngPass">
+                <input type="password" name="password" placeholder="enter password" required="" id="id_password">
+                <input type="button" value="Save" onclick="handleUserInfoSave(event)">
             </div>
 
             <div class="form-input">
-                <input type="submit" id="submitBtn" value="Save Info" />
+                <button id='delUserBtn' type='button' onclick="handleDeleteUser(event)">Delete Yourself</button>
             </div>
+
+            <div id="editUserErrMsg"></div>
+
         </form>
     </div>
 
@@ -108,9 +151,25 @@
                     <img src="{% static 'logos/user.png' %}" alt="User Picture"></button>
             </div>
 
+            <div id="logout-btn">
+                <button type="button" onclick="handleLogout(event)">Log Out</button>
+            </div>
+
+
+            <div class="searchUser">
+
+
+                <div id="searchUser">
+                    <input type="text" name="searchUserQuery" id="searchUserBtn" oninput="handleSearchUser(event)"
+                        placeholder="Search for a user...">
+                    <div id="searchRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                </div>
+            </div>
+
 
         </div>
-
         <div class="main-section">
             {% block content %}
             {% endblock %}

@@ -1,82 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
-    <title>Create New Account</title>
 
-    <style>
-      body {
-        font-family: "Roboto";
-      }
-    </style>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+    rel="stylesheet" />
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+  <title>Create New Account</title>
 
-    <script></script>
-  </head>
-  <body>
-    <div class="form-container">
-      <h1>Create New Account</h1>
+  <style>
+    body {
+      font-family: "Roboto";
+    }
+  </style>
 
-      {{ form.non_field_errors }}
-      <form action="" method="POST">
-        {% csrf_token %}
-        <div class="form-input">
-          {{ form.first_name.errors }}
-          <label class="form-label" for="{{ form.first_name.id_for_label }}"
-            >First Name:</label
-          >
-          {{ form.first_name }}
-        </div>
+  <script></script>
+</head>
 
-        <div class="form-input">
-          {{ form.last_name.errors }}
-          <label class="form-label" for="{{ form.last_name.id_for_label }}"
-            >Last Name:</label
-          >
-          {{ form.last_name }}
-        </div>
+<body>
+  <div class="form-container">
+    <h1>Create New Account</h1>
 
-        <div class="form-input">
-          {{ form.email.errors }}
-          <label class="form-label" for="{{ form.email.id_for_label }}"
-            >E-Mail:</label
-          >
-          {{ form.email }}
-        </div>
+    {{ form.non_field_errors }}
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="form-input">
+        <label class="form-label" for="id_first_name">First Name:</label>
+        <input type="text" name="first_name" placeholder="enter your first name" maxlength="20" required=""
+          id="id_first_name">
+      </div>
 
-        <div class="form-input">
-          {{ form.password.errors }}
-          <label class="form-label" for="{{ form.password.id_for_label }}"
-            >Password:</label
-          >
-          {{ form.password }}
-        </div>
+      <div class="form-input">
+        <label class="form-label" for="id_last_name">Last Name:</label>
+        <input type="text" name="last_name" placeholder="enter your last name" maxlength="20" required=""
+          id="id_last_name">
+      </div>
 
-        <div class="form-input">
-          {{ form.confirm_password.errors }}
-          <label
-            class="form-label"
-            for="{{ form.confirm_password.id_for_label }}"
-            >Confirm Password:</label
-          >
-          {{ form.confirm_password }}
-        </div>
+      <div class="form-input">
+        <label class="form-label" for="id_email">E-Mail:</label>
+        <input type="email" name="email" placeholder="enter your e-mail" required="" id="id_email">
+      </div>
 
-        <div class="form-input">
-          <input type="submit" id="submitBtn" value="Create New Account" />
-        </div>
-      </form>
-      {% if error_msg %}
-      <div id="error-msg">{{error_msg}}</div>
-      {% endif %}
-    </div>
-  </body>
+      <div class="form-input">
+        <label class="form-label" for="id_password">Password:</label>
+        <input type="password" name="password" placeholder="enter your password" required="" id="id_password">
+      </div>
+
+      <div class="form-input">
+        <label class="form-label" for="id_confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" placeholder="enter your password again" required=""
+          id="id_confirm_password">
+      </div>
+
+      <div class="form-input">
+        <input type="submit" id="submitBtn" value="Create New Account">
+      </div>
+    </form>
+    {% if error_msg %}
+    <div id="error-msg">{{error_msg}}</div>
+    {% endif %}
+    <button><a href="/login">Or Log In</a></button>
+  </div>
+
+</body>
+
 </html>
