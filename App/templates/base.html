@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
@@ -21,14 +23,14 @@
 
     <!-- UNIVERSAL FIXED COMPONENTS -->
     <div class="project-options">
-        <a href="#">Users</a>
-        <a href="#">Tasks</a>
-        <a href="#">Task Dependencies</a>
+        <div onclick="handleProjectOptions(event)">Tasks</div>
+        <div onclick="handleProjectOptions(event)">Task Dependencies</div>
+        <div onclick="handleProjectOptions(event)">Settings</div>
     </div>
 
 
 
-    <div class="edit-user-info">
+    <div class=" edit-user-info">
         <form onsubmit="return false;">
             {% csrf_token %}
             <h1>Edit Profile</h1>
@@ -127,15 +129,20 @@
             </div>
 
             <div class="create-project sidebar-item">
-                <button id="createProjBtn">
-                    <img src="{% static 'logos/new.png' %}" alt="New Board Logo">
-                    <div>New Board</div>
-                </button>
+                <form action="{% url 'createproject' %}">
+                    <button id="createProjBtn">
+                        <img src="{% static 'logos/new.png' %}" alt="New Board Logo">
+                        <div>New Board</div>
+                    </button>
+                </form>
             </div>
             <div class="sidebar-item">
-                <button class="project-btn" onclick="showProjectMenu(event)" id="project1">
-                    ProjectBoardX
+                {% for project in projects %}
+                <button data-project-id={{project.0}} class="project-btn" onclick="showProjectMenu(event)"
+                    id="project1">
+                    {{project.1}}
                 </button>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -155,18 +162,6 @@
                 <button type="button" onclick="handleLogout(event)">Log Out</button>
             </div>
 
-
-            <div class="searchUser">
-
-
-                <div id="searchUser">
-                    <input type="text" name="searchUserQuery" id="searchUserBtn" oninput="handleSearchUser(event)"
-                        placeholder="Search for a user...">
-                    <div id="searchRes">
-                        <!-- DATA WILL BE INSERTED VIA JS -->
-                    </div>
-                </div>
-            </div>
 
 
         </div>
