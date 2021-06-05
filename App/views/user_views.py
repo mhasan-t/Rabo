@@ -1,7 +1,5 @@
-from decimal import Context
-from typing import cast
-from django.http.request import QueryDict
-from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
+
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.db import connection
@@ -18,10 +16,9 @@ import uuid
 import datetime
 import pytz
 import bcrypt
-import PIL.Image as PilImage
 
 from ..forms import CreateUserForm, LoginUserForm
-from ..utils import login_required
+from ..utils import login_required_user
 
 
 class CreateUser(View):
@@ -63,11 +60,12 @@ class CreateUser(View):
             created_dt = datetime.datetime.now(DTZ)
 
             query = f"""
-                INSERT INTO user(first_name, last_name, email, password, created_at) VALUES(
+                INSERT INTO user(first_name, last_name, email, password, picture , created_at) VALUES(
                     "{str(first_name)}" ,
                     "{str(last_name)}" ,
                     "{str(email)}",
                     "{hashed_pass.decode('utf-8')}",
+                    "default.png",
                     "{str(created_dt.strftime('%Y:%m:%d %H:%M:%S'))}"
                 )
             """
@@ -160,7 +158,7 @@ class LoginUser(View):
 
 
 class EditUser(View):
-    @login_required
+    @login_required_user
     def post(self, request, user_id):
         # post_data = json.loads(request.body.decode("utf-8"))
         # field = post_data.get('field')
@@ -200,7 +198,7 @@ class EditUser(View):
 
 
 class DeleteUser(View):
-    @login_required
+    @login_required_user
     def post(self, request, user_id):
         query = f'''
             DELETE FROM user
@@ -219,7 +217,7 @@ class SearchUser(View):
         searchQ = request.GET.get("query")
 
         query = f'''
-            SELECT first_name, last_name FROM user
+            SELECT id, first_name, last_name FROM user
             WHERE first_name LIKE "%{searchQ}%"
                 OR last_name LIKE "%{searchQ}%"
         '''

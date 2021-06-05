@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/project.css' %}" />
+    <title>Board List</title>
+
+    <style>
+        body {
+            font-family: "Roboto";
+        }
+
+        table {
+            width:100%;
+        }
+        tr, th {
+            height: 50px;
+        }
+        th {
+            border: 1px solid blue;
+        }
+        td {
+            border: 1px solid black;
+        }
+
+    </style>
+
+    <script>
+    </script>
+
+</head>
+
+<body>
+    <button><a href="/new-project">Create New Project</a></button>
+    <table>
+        <tr>
+            <th> ID </th>
+            <th> Name </th>
+            <th> Description </th>
+            <th> Created At </th>
+            <th> Options </th>
+        </tr>
+        
+    {% for project in projects %}
+        <tr>
+            <td>{{ project.0 }}</td>
+            <td>{{ project.1 }}</td>
+            <td>{{ project.2 }}</td>
+            <td>{{ project.3 }}</td>
+            <td>
+                <button><a href="/update-project/{{ project.0 }}">Update</a></button>
+                <button><a href="/delete-project/{{ project.0 }}">Delete</a></button>
+            </td>
+        </tr>
+    {% endfor %}
+
+    </table>
+
+</body>
+
+</html>

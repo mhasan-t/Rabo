@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/project.css' %}" />
+    <title>New Board</title>
+
+    <style>
+        body {
+            font-family: "Roboto";
+        }
+    </style>
+
+    <script></script>
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>New Board</h1>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_name">Name:</label>
+                <input type="text" name="name" placeholder="enter project name" maxlength="30" required="" id="id_name">
+            </div>
+
+            <div class="form-input">
+                <label class="form-label" for="id_desc">Description :</label>
+                <textarea rows=4 name="desc" placeholder="description..." maxlength="255" required=""
+                    id="id_desc"></textarea>
+            </div>
+
+
+            <div class="form-input">
+                <input type="submit" id="submitBtn" value="Create New Project">
+            </div>
+        </form>
+        {% if error_msg %}
+        <div id="error-msg">{{error_msg}}</div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>

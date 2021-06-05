@@ -1,8 +1,10 @@
 function showProjectMenu(e) {
     let target = e.target;
     let Y = target.getBoundingClientRect().y;
+    let id = e.target.dataset.projectId;
 
     let proj_op = document.querySelector(".project-options");
+    proj_op.dataset.projectId = id;
     proj_op.style.display = proj_op.style.display == "flex" ? "none" : "flex";
     proj_op.style.left = "250px";
     proj_op.style.top = Y + "px";
@@ -235,61 +237,11 @@ function handleDeleteUser(e) {
     )
 }
 
-function handleSearchUser(e) {
-    let resArea = document.querySelector("#searchRes");
 
-    function cleanResArea() {
-        resArea.innerHTML = "";
+function handleProjectOptions(e) {
+    let pID = e.target.parentElement.dataset.projectId;
+    if (e.target.innerText == "Settings") {
+        window.location.assign(`/project-settings/${pID}`);
     }
-
-    const csrftoken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
-
-    if (e.target.value == "") {
-        resArea.style.display = "none";
-        return;
-    } else {
-        resArea.style.display = "flex";
-    }
-
-
-
-    fetch(
-        "/search-user?query=" + e.target.value
-    ).then(
-        (res) => {
-            if (res.status == 200) {
-                return res.json();
-            }
-            return false;
-        }
-    ).then(
-        (res) => {
-            if (!res) {
-                return;
-            }
-            cleanResArea();
-            for (let i = 0; i < res.length; i++) {
-                let row = document.createElement("div");
-                let fn = document.createTextNode(res[i].first_name)
-                let ln = document.createTextNode(" " + res[i].last_name)
-
-                let td1 = document.createElement("span");
-                let td2 = document.createElement("span");
-                td1.appendChild(fn);
-                td2.appendChild(ln);
-                // td1.style.display = "block";
-                // td2.style.display = "block";
-                // td2.style.marginLeft = "5px";
-
-                row.appendChild(td1);
-                row.appendChild(td2);
-
-                resArea.appendChild(row);
-            }
-        }
-    )
 
 }

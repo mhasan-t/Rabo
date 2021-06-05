@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/project.css' %}" />
+    <title>Board Settings</title>
+
+    <style>
+        body {
+            font-family: "Roboto";
+        }
+    </style>
+
+    <script src="{% static 'js/projectsettings.js' %}"></script>
+</head>
+
+<body>
+    <div id="pid" style="display: none;">{{p.0}}</div>
+
+    <div class="titleBar">
+        <button id="backBtn"><a href="/"> <img src="{% static 'logos/back.png' %}" alt=""> </a> </button>
+        <h1>{{ p.1 }}/Settings</h1>
+    </div>
+    <div class="form-container">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_name">Name:</label>
+                <div>
+                    <input type="text" name="name" placeholder="enter project name" maxlength="30" required=""
+                        id="id_name" value={{p.1}}>
+                    <input type="button" class="submitBtn" data-id="{{p.0}}" value="Save" onclick="updateProj(event)">
+                </div>
+            </div>
+
+            <div class="form-input">
+                <label class="form-label" for="id_desc">Description :</label>
+                <div>
+                    <textarea rows=4 name="desc" placeholder="description..." maxlength="255" required=""
+                        id="id_desc">{{p.2}}</textarea>
+                    <input type="button" class="submitBtn" data-id="{{p.0}}" value="Save" onclick="updateProj(event)">
+                </div>
+            </div>
+
+        </form>
+        {% if error_msg %}
+        <div>{{error_msg}}</div>
+        {% endif %}
+
+        <div id="error-msg"">{{success_msg}}</div>
+
+         </div> 
+        
+         <div class=" user-management">
+            <div id="searchUser">
+                <input type="text" name="searchUserQuery" id="searchUserBtn" oninput="handleSearchUser(event)"
+                    placeholder="Search for a user...">
+                <div id="searchRes">
+                    <!-- DATA WILL BE INSERTED VIA JS -->
+                </div>
+            </div>
+            <div class="users">
+                {% for u in p_users %}
+                <div class="user" data-id={{u.0}}>
+                    <div>
+                        <img src="/media/profile_pics/{{u.3}}" alt="">
+                        <div>{{ u.1 }} {{u.2}} </div>
+                    </div>
+                    <div class="actions">
+                        <button data-uid={{u.0}} data-action='remove' id="removeBtn"
+                            onclick="handleProjectUsers(event)">Remove</button>
+                        {% if not u.4 %}
+                        <button data-uid={{u.0}} data-action="makesuper" id="makeSuperBtn"
+                            onclick="handleProjectUsers(event)">Make
+                            Supervisor</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+</body>
+
+</html>
