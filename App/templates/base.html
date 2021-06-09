@@ -42,7 +42,7 @@
 
                     <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
                         src="{% static 'logos/edit.png' %}">
-                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                    <input type="button" class="saveUserInfoBtn" value="Save" onclick="handleUserInfoSave(event)">
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                         id="id_last_name" value="{{user_data.2}}" disabled>
                     <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
                         src="{% static 'logos/edit.png' %}">
-                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                    <input type="button" class="saveUserInfoBtn" value="Save" onclick="handleUserInfoSave(event)">
                 </div>
             </div>
 
@@ -66,7 +66,7 @@
                         value="{{user_data.4}}" disabled>
                     <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
                         src="{% static 'logos/edit.png' %}">
-                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                    <input type="button" class="saveUserInfoBtn" value="Save" onclick="handleUserInfoSave(event)">
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
                         value="{{user_data.6}}" disabled>
                     <input type="image" class="editbtn" onclick="handleUserInfoEdit(event)"
                         src="{% static 'logos/edit.png' %}">
-                    <input type="button" class="submitBtn" value="Save" onclick="handleUserInfoSave(event)">
+                    <input type="button" class="saveUserInfoBtn" value="Save" onclick="handleUserInfoSave(event)">
                 </div>
             </div>
 
@@ -113,6 +113,31 @@
     </div>
 
 
+    <div class="notifications">
+        {% for notification in notifications %}
+        <div class="noti" data-noti-id={{notification.0}}>
+            {% if notification.7 %}
+            <span class="bold">{{notification.9}} {{notification.10}}</span> has invited you to join <span
+                class="bold">{{notification.8}}</span>
+            <div><button data-noti-id={{notification.0}} class="yesBtn"
+                    onclick="handleAcceptInvite(event)">accept</button>
+                <button class="noBtn" data-noti-id={{notification.0}}
+                    onclick="handleRejectInvite(event)">reject</button>
+            </div>
+            <div class="smallfont">{{notification.11}}</div>
+            {% endif %}
+
+            {% if not notification.7 %}
+            <div>{{ notification.1 }}</div>
+            <div class="smallfont">{{notification.11}}</div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+
+
     <!-- SideBar -->
     <div class="sidebar-container">
 
@@ -138,8 +163,8 @@
             </div>
             <div class="sidebar-item">
                 {% for project in projects %}
-                <button data-project-id={{project.0}} class="project-btn" onclick="showProjectMenu(event)"
-                    id="project1">
+                <button data-project-id={{project.0}} class="project-btn" onclick="showProjectMenu(event)" id="project1"
+                    data-is-super={{project.4}}>
                     {{project.1}}
                 </button>
                 {% endfor %}
@@ -150,7 +175,8 @@
     <div class="main-view-container">
         <div class="top-bar">
             <div class="notif">
-                <button><img src="{% static 'logos/notifications.png' %}" alt="Notifications"></button>
+                <button onclick="handleNotiBtn(event)"><img src="{% static 'logos/notifications.png' %}"
+                        alt="Notifications"></button>
             </div>
 
             <div class="user-btn">

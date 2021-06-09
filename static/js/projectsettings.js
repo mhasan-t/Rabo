@@ -1,3 +1,15 @@
+function reloadWindow() {
+    new Promise(
+        (res, rej) => {
+            setTimeout(() => res("donw"), 100);
+        }
+    ).then(
+        (res) => {
+            window.location.replace(window.location.href);
+        }
+    )
+}
+
 function updateProj(e) {
     let errMsg = document.querySelector("#error-msg");
 
@@ -33,16 +45,12 @@ function updateProj(e) {
 
 
 function handleSearchUser(e) {
+    let pid = document.querySelector("#pid").innerText;
     let resArea = document.querySelector("#searchRes");
 
     function cleanResArea() {
         resArea.innerHTML = "";
     }
-
-    const csrftoken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        .split('=')[1];
 
     if (e.target.value == "") {
         resArea.style.display = "none";
@@ -54,7 +62,7 @@ function handleSearchUser(e) {
 
 
     fetch(
-        "/search-user?query=" + e.target.value
+        `/search-user/${pid}?query=${e.target.value}`
     ).then(
         (res) => {
             if (res.status == 200) {
@@ -85,22 +93,53 @@ function handleSearchUser(e) {
                 let inviteBtn = document.createElement("button");
                 inviteBtn.classList.add("inviteBtn");
                 inviteBtn.innerText = "Invite";
-                inviteBtn, addEventListener("click", () => {
-                    let pid = document.querySelector("#pid").innerText;
-                    let uid = res[i].id;
-                    handleInviteUser(pid, uid);
-                });
-                row.appendChild(inviteBtn);
 
+                row.appendChild(inviteBtn);
+                row.dataset.uid = res[i].id;
                 resArea.appendChild(row);
             }
+
+            document.querySelectorAll(".inviteBtn").forEach(
+                (item, index) => {
+                    item.addEventListener("click", () => {
+                        let pid = document.querySelector("#pid").innerText;
+                        let uid = item.parentElement.dataset.uid;
+                        handleInviteUser(pid, uid);
+                    });
+                }
+            )
+
         }
     )
 
 }
 
 function handleInviteUser(pid, uid) {
-    console.log(uid + " invited to " + pid);
+    console.log("object");
+    const csrftoken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        .split('=')[1];
+
+
+    fetch(`/sendNotif/${pid}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            type: 'invite',
+            sent_to: uid,
+            data: ""
+        })
+
+    }).then((res) => {
+        reloadWindow();
+    })
+
 }
 
 function handleProjectUsers(e) {
@@ -109,16 +148,16 @@ function handleProjectUsers(e) {
     let action = e.target.dataset.action;
 
     let yes = confirm("Are you sure?");
-    if (yes == null) {
+    if (yes == false) {
         return;
     }
 
-    fetch(`/project-actions/${pid}?action=${action}&on_user=${uid}`), {
+    fetch(`/project-actions/${pid}?action=${action}&on_user=${uid}`, {
             credentials: 'same-origin',
-        }
+        })
         .then((res) => {
             if (res.status == 200) {
-                window.location.assign(window.location.href);
+                reloadWindow();
             } else {
                 alert("Something went wrong!");
             }

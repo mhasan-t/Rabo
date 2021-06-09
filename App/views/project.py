@@ -1,4 +1,4 @@
-from App.utils import login_required_project, login_required_user
+from App.utils import login_required_project_admin, login_required_user
 from django.db import connection
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic import View
@@ -58,7 +58,7 @@ class CreateProject(View):
 
 
 class ProjectSettings(View):
-    @login_required_project
+    @login_required_project_admin
     def get(self, request, user_id, pid):
 
         query = f'''
@@ -67,6 +67,14 @@ class ProjectSettings(View):
         '''
 
         with connection.cursor() as cursor:
+                if not cursor.execute(f'''
+                    SELECT role FROM works_on WHERE user_id={user_id} AND project_id={pid}
+                '''):
+                    return HttpResponseRedirect(reverse("dashboard"))
+                
+                if cursor.fetchone()[0] != "supervisor":
+                    return HttpResponseRedirect(reverse("dashboard"))
+
                 cursor.execute(query)
                 pj = cursor.fetchone()
 
@@ -87,7 +95,7 @@ class ProjectSettings(View):
                 }
                 return render(request, "project_settings.html", context=context_data)
 
-    @login_required_project
+    @login_required_project_admin
     def post(self, request, user_id, pid):
         field = request.POST.get("field")
         data = request.POST.get("data")
@@ -109,7 +117,7 @@ class ProjectSettings(View):
 
 
 class ProjectDeleteView(View):
-    @login_required_project
+    @login_required_project_admin
     def get(self, request, user_id, pid):
         query = f'''
             DELETE FROM project
@@ -121,7 +129,7 @@ class ProjectDeleteView(View):
 
 
 class ProjectActions(View):
-    @login_required_project
+    @login_required_project_admin
     def get(self, request, user_id, pid):
         action = request.GET.get('action')
         on_user = request.GET.get('on_user')
