@@ -101,6 +101,14 @@ textarea {
   -o-border-radius: none;
 }
 
+input[type="datetime-local"] {
+  width: 30vw;
+  max-width: 350px;
+  height: 40px;
+}
+
+
+
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus,

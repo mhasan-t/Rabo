@@ -130,6 +130,7 @@ class CreateTask(View):
         deadline = request.POST.get("deadline")
         urgency = request.POST.get("urgency")
         category = request.POST.get("category")
+        assigned_to = request.POST.get('assigned_to')
 
         DTZ = pytz.timezone("Asia/Dhaka")
         created_dt = datetime.datetime.now(DTZ).strftime('%Y:%m:%d %H:%M:%S')
@@ -138,8 +139,8 @@ class CreateTask(View):
 
         with connection.cursor() as cursor:
             cursor.execute(f'''
-                INSERT INTO task(label, `desc`, deadline, urgency, created_at, category, project_id, created_by)
-                VALUES( '{label}', '{desc}', '{deadline_dt}', '{urgency}', '{created_dt}', '{category}', '{pid}', '{user_id}')
+                INSERT INTO task(label, `desc`, deadline, urgency, created_at, category, project_id, created_by, assigned_to)
+                VALUES( '{label}', '{desc}', '{deadline_dt}', '{urgency}', '{created_dt}', '{category}', '{pid}', '{user_id}', {assigned_to})
             ''')
             return HttpResponseRedirect(reverse('showtasks', args=[pid]))
 
@@ -366,9 +367,10 @@ class EndTask(View):
                 WHERE id={taskid}
             ''')
 
-            cursor.execute(f"SELECT label FROM task WHERE id={taskid}")
+            cursor.execute(f"SELECT label, assigned_to FROM task WHERE id={taskid}")
             res = cursor.fetchone()
             label =  res[0]
+            assigned_to =  res[1]
 
 
             cursor.execute(f"SELECT name FROM project WHERE id={pid}")
@@ -403,6 +405,18 @@ class EndTask(View):
                  )
                 '''
                 cursor.execute(query)
+
+            cursor.execute(f'''
+                INSERT INTO notification(data, created_at, type, sent_to, sent_by, project_id)
+                VALUES( 
+                    "Task {str(label)} from {str(pname)} has ended",
+                    '{now_dt}',
+                    'info',
+                    '{assigned_to}',
+                    '{user_id}',
+                    '{pid}'
+                 )
+            ''')
 
             return HttpResponseRedirect(reverse('managetask', args=[pid, taskid]))
 

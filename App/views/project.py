@@ -101,6 +101,9 @@ class ProjectSettings(View):
         data = request.POST.get("data")
 
         if field!="" and data!="" and field!=None and data!=None:
+            if field=="deadline":
+                data = datetime.datetime.strptime(data,"%Y-%m-%dT%H:%M").strftime('%Y:%m:%d %H:%M:%S')
+
             query = f'''
                 UPDATE project
                 SET `{field}`="{data}"
@@ -108,6 +111,7 @@ class ProjectSettings(View):
             '''
             with connection.cursor() as cursor:
                 cursor.execute(query)
+                # print(query)
             return render(request=request, template_name="project_settings.html", context={'success_msg':"Success"})
         else:
             context_data = {

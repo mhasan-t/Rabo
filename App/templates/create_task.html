@@ -19,8 +19,8 @@
 
     <div class="form-input">
         <label class="form-label" for="id_desc">Description:</label>
-        <textarea class="lotOfWriting" cols='50' rows='50' name="desc" placeholder="describe the task" maxlength="20"
-            required="" id="id_desc"></textarea>
+        <textarea class="lotOfWriting" cols='50' rows='50' name="desc" placeholder="describe the task" required=""
+            id="id_desc"></textarea>
     </div>
 
     <div class="form-input">
@@ -35,8 +35,8 @@
 
     <div class="form-input showCats zindex2">
         <label class="form-label" for="id_category">Category:</label>
-        <input type="text" name="category" required="" id="id_category" oninput="handleShowCats(event)"
-            data-pid={{pid}}>
+        <input type="text" name="category" required="" id="id_category" oninput="handleShowCats(event)" data-pid={{pid}}
+            autocomplete="off">
         <div id="searchRes">
             <!-- DATA WILL BE INSERTED VIA JS -->
         </div>
@@ -45,7 +45,7 @@
     <div class="form-input showCats zindex1">
         <label class="form-label" for="id_assigned_to">Assign to:</label>
         <input type="text" name="assigned_to" required="" id="id_assigned_to" oninput="handleShowUsers(event)"
-            data-pid={{pid}}>
+            data-pid={{pid}} autocomplete="off">
         <div id="searchUserRes">
             <!-- DATA WILL BE INSERTED VIA JS -->
         </div>

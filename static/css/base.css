@@ -464,7 +464,7 @@ label {
 .notifications {
   display: none;
   position: fixed;
-  right: 10px;
+  right: 20px;
   top: 50px;
 
   width: 300px;

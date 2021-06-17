@@ -50,11 +50,11 @@ class DashboardView(View):
                                         JOIN project as pr ON pr.id=nt.project_id
                     WHERE sent_to={user_id}
                 '''
-                print(query)
+                # print(query)
                 cursor.execute(query)
                 noti_data = cursor.fetchall()
                 context_data["notifications"] = noti_data
-                print(noti_data)
+                # print(noti_data)
 
                 return render(template_name='dashboard.html', request=request, context=context_data)
 

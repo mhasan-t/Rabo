@@ -54,6 +54,7 @@ class SearchUserForInvite(View):
             # print(resDict)
 
             json_data = json.dumps(resDict)
+            print(json_data)
 
             if res:
                 return HttpResponse(json_data, content_type="application/json")
