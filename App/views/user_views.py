@@ -1,4 +1,5 @@
 
+from App.utils.login_required import login_required_project_admin
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views.generic import View
 from django.shortcuts import render, redirect
@@ -212,28 +213,3 @@ class DeleteUser(View):
         
         return HttpResponse(status=500)
 
-class SearchUser(View):
-    def get(self, request):
-        searchQ = request.GET.get("query")
-
-        query = f'''
-            SELECT id, first_name, last_name FROM user
-            WHERE first_name LIKE "%{searchQ}%"
-                OR last_name LIKE "%{searchQ}%"
-        '''
-
-        with connection.cursor() as cursor:
-            res = cursor.execute(query)
-
-            desc = cursor.description 
-
-            resDict = [dict(zip([col[0] for col in desc], row)) 
-                for row in cursor.fetchall() ]
-
-
-            json_data = json.dumps(resDict)
-
-            if res:
-                return HttpResponse(json_data, content_type="application/json")
-        
-        return HttpResponse(status=500)

@@ -1,0 +1,163 @@
+.tasks-container {
+    display: flex;
+    gap: 10px;
+}
+
+.category-col {
+    flex-basis: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cat {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.task {
+    padding: 10px;
+    border: 1px solid rgb(81, 81, 238);
+}
+
+.task>div {
+    border-bottom: 1px solid rgb(136, 136, 136);
+    margin-bottom: 5px;
+}
+
+.showCats {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#searchRes {
+    position: absolute;
+    top: 55px;
+    border: 1px solid rgb(115, 205, 246);
+    padding: 10px;
+    width: 200px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #4174a0;
+    z-index: 2;
+    display: none;
+}
+
+#searchRes>div {
+    padding: 7px;
+    font-size: 12px;
+    color: white;
+    border-bottom: 1px solid #078dff;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.titleBar {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#backBtn {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+
+#searchUserRes {
+    position: absolute;
+    top: 55px;
+    border: 1px solid rgb(115, 205, 246);
+    padding: 10px;
+    width: 200px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #4174a0;
+    z-index: 2;
+    display: none;
+}
+
+#searchUserRes>div {
+    padding: 7px;
+    font-size: 12px;
+    color: white;
+    border-bottom: 1px solid #078dff;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.lotOfWriting {
+    height: 150px;
+    border: 1px solid rgb(207, 207, 207);
+    background-color: #f5f5f5;
+    border-radius: none;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    width: 30vw;
+    max-width: 350px;
+    padding: 8px;
+
+    -webkit-border-radius: none;
+    -moz-border-radius: none;
+    -ms-border-radius: none;
+    -o-border-radius: none;
+}
+
+.lotOfWriting:focus {
+    box-shadow: 0px 0px 1px 1px rgb(157, 236, 243);
+}
+
+.taskview {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.taskview>div {
+    border: 1px solid rgb(111, 102, 248);
+    padding: 10px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.manage-task-content-container {
+    display: flex;
+}
+
+.form-input>div {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.infoview {
+    border: 1px solid rgb(111, 102, 248);
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+
+.feedback {
+    border-bottom: 1px dotted rgb(111, 102, 248);
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}

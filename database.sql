@@ -15,7 +15,8 @@ CREATE TABLE project
      id         INT(11) PRIMARY KEY AUTO_INCREMENT,
      name       VARCHAR(255) NOT NULL,
      `desc`     VARCHAR(255),
-     created_at DATETIME NULL
+     created_at DATETIME NULL,
+     deadline DATETIME NULL
   );
 
 
@@ -25,19 +26,11 @@ CREATE TABLE notice
      data       TEXT,
      posted_at  DATETIME NULL,
      type       VARCHAR(11),
+     title 		VARCHAR(150),
      project_id INT(11) NOT NULL,
      CONSTRAINT project_notice FOREIGN KEY (project_id) REFERENCES project (id) ON DELETE CASCADE ON UPDATE CASCADE
   );
 
-
-CREATE TABLE category
-  (
-     id         INT(11) PRIMARY KEY AUTO_INCREMENT,
-     name       VARCHAR(50) NOT NULL,
-     project_id INT(11) NOT NULL,
-
-     CONSTRAINT has FOREIGN KEY (project_id) REFERENCES project (id) ON DELETE CASCADE ON UPDATE CASCADE
-  );
 
 
 CREATE TABLE `user`
@@ -84,9 +77,11 @@ CREATE TABLE notification
      type       VARCHAR(10),
      sent_to    INT(11) NOT NULL,
      sent_by    INT(11) NULL,
+     project_id INT(11) NULL,
      
      CONSTRAINT noti_sent_to FOREIGN KEY (sent_to) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE CASCADE,
-     CONSTRAINT noti_sent_by FOREIGN KEY (sent_by) REFERENCES `user` (id) ON DELETE SET NULL ON UPDATE CASCADE
+     CONSTRAINT noti_sent_by FOREIGN KEY (sent_by) REFERENCES `user` (id) ON DELETE SET NULL ON UPDATE CASCADE,
+     CONSTRAINT noti_sent_from FOREIGN KEY (project_id) REFERENCES `project` (id) ON DELETE CASCADE ON UPDATE CASCADE
   );
 
 
@@ -99,12 +94,16 @@ CREATE TABLE task
      urgency      VARCHAR(11),
      created_at   DATETIME NULL,
      completed_at DATETIME NULL,
-     category_id  INT(11) NOT NULL,
-     dependent_on INT(11),
+     category     VARCHAR(50) NOT NULL,
      managed_by   INT(11),
-     
-     CONSTRAINT includes FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE,
-     CONSTRAINT manages FOREIGN KEY (managed_by) REFERENCES `user`(id) ON DELETE SET NULL ON UPDATE CASCADE
+     created_by   INT(11),
+     project_id   INT(11) NOT NULL,
+     assigned_to  INT(11) NULL,
+
+     CONSTRAINT has FOREIGN KEY (project_id) REFERENCES project (id) ON DELETE CASCADE ON UPDATE CASCADE,
+     CONSTRAINT manages FOREIGN KEY (managed_by) REFERENCES `user`(id) ON DELETE SET NULL ON UPDATE CASCADE,
+     CONSTRAINT task_assigned_to FOREIGN KEY (assigned_to) REFERENCES `user`(id) ON DELETE SET NULL ON UPDATE CASCADE,
+     CONSTRAINT created_task FOREIGN KEY (created_by) REFERENCES `user`(id) ON DELETE SET NULL ON UPDATE CASCADE
   );
 
 

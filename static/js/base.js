@@ -1,3 +1,16 @@
+function reloadWindow() {
+    new Promise(
+        (res, rej) => {
+            setTimeout(() => res("donw"), 100);
+        }
+    ).then(
+        (res) => {
+            window.location.replace(window.location.href);
+        }
+    )
+}
+
+
 function showProjectMenu(e) {
     let target = e.target;
     let Y = target.getBoundingClientRect().y;
@@ -10,6 +23,13 @@ function showProjectMenu(e) {
     proj_op.style.top = Y + "px";
 
     proj_op.dataset.optionsFor = target.id;
+    let settings_btn = proj_op.children[2];
+
+    if (target.dataset.isSuper == 1) {
+        settings_btn.style.display = "block";
+    } else {
+        settings_btn.style.display = "none";
+    }
 }
 
 function handleUserBtn(e) {
@@ -202,7 +222,7 @@ function handleChangePass(e) {
 
 function handleLogout(e) {
     document.cookie = "session_id= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-    window.location.assign("login");
+    window.location.href = "/login";
 }
 
 function handleDeleteUser(e) {
@@ -243,5 +263,31 @@ function handleProjectOptions(e) {
     if (e.target.innerText == "Settings") {
         window.location.assign(`/project-settings/${pID}`);
     }
+    if (e.target.innerText == "Tasks") {
+        window.location.assign(`/tasks/${pID}`);
+    }
 
+}
+
+
+function handleNotiBtn(e) {
+    let notiarea = document.querySelector(".notifications");
+    notiarea.style.display = notiarea.style.display == "block" ? "none" : "block";
+}
+
+function handleAcceptInvite(e) {
+    fetch(`/acceptInvite?noti_id=${e.target.dataset.notiId}`, {
+        credentials: 'same-origin',
+    }).then((res) => {
+        reloadWindow();
+    })
+
+}
+
+function handleRejectInvite(e) {
+    fetch(`/rejectInvite?noti_id=${e.target.dataset.notiId}`, {
+        credentials: 'same-origin',
+    }).then((res) => {
+        reloadWindow();
+    })
 }

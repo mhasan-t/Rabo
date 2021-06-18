@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+
+
+
+
+<div class="titleBar">
+    <button id="backBtn"><a href="{% url 'showtasks' pid=pid %}"> <img src="{% static 'logos/back.png' %}" alt=""> </a>
+    </button>
+    <h1>{{project_name}}/tasks/{{ task.1 }}/Manage</h1>
+    <u class="smallfont"><i>Created by <span class="bold">{{ created_by.1 }} {{ created_by.2 }}</span></i></u>
+</div>
+
+{% if isSuper and not task.12%}
+
+{% csrf_token %}
+<div class="manage-task-content-container">
+    <div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_label">label:</label>
+                <div>
+                    <input type="text" name="label" placeholder="enter task label" maxlength="20" required=""
+                        id="id_label" value='{{task.1}}'>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_desc">Description:</label>
+                <div>
+                    <textarea class="lotOfWriting" cols=50 rows=50 name="desc" placeholder="describe the task"
+                        required="" id="id_desc">{{task.2}}</textarea>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_deadline">Deadline:</label>
+                <div>
+                    <input type="datetime-local" name="deadline" required="" id="id_deadline" value={{task.3}}>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_urgency">Urgency:</label>
+                <div>
+                    <input type="text" name="urgency" required="" id="id_urgency" value={{task.4}}>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex3">
+                <label class="form-label" for="id_manager">Manager:</label>
+                <div>
+                    <input type="text" name="managed_by" required="" id="id_manager" oninput="handleShowManagers(event)"
+                        value={{task.8}} data-pid={{pid}} data-taskid={{task.0}}>
+                    <div id="searchRes">
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex2">
+                <label class="form-label" for="id_category">Category:</label>
+                <div>
+                    <input type="text" name="category" required="" id="id_category" oninput="handleShowCats(event)"
+                        data-pid={{pid}} value="{{task.7}}">
+                    <div id="searchRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex1">
+                <label class="form-label" for="id_assigned_to">Assign to:</label>
+                <div>
+                    <input type="text" name="assigned_to" required="" id="id_assigned_to"
+                        oninput="handleShowUsers(event)" data-pid={{pid}} value={{task.11}}>
+                    <div id="searchUserRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+
+        <div class="form-input showCats">
+            <label class="form-label" for="id_dependent_on">Add Dependencies :</label>
+            <div>
+                <input type="text" name="dependent_on" required="" id="id_dependent_on" oninput="handleShowTasks(event)"
+                    data-pid={{pid}} data-taskid={{task.0}}>
+                <div id="searchTaskRes" class="searchResContainer">
+                    <!-- DATA WILL BE INSERTED VIA JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- rightside -->
+    <div>
+        <form action="/feedback/{{pid}}/{{task.0}}" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_feedback">Feedback:</label>
+                <div>
+                    <textarea class="lotOfWriting" cols=50 rows=50 name="feedback" placeholder="Give Feedback"
+                        required="" id="id_feedback"></textarea>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <div class="infoview"> <u>Dependant on</u> :
+            {% for superior in dependencies %}
+            <a class="blue-font" href="{% url 'managetask' pid=pid taskid=superior.0 %}">#{{ superior.0 }} </a>
+            {% endfor %}
+        </div>
+        <div class="infoview"> <u>Superior To</u> :
+            {% for subordinate in superior_to %}
+            <a class="blue-font" href="{% url 'managetask' pid=pid taskid=subordinate.0 %}">#{{ subordinate.0 }} </a>
+            {% endfor %}
+        </div>
+
+        <div class="infoview feedback-container">
+            <span class="bold">Feedbacks -</span>
+
+            {% for feedback in feedbacks %}
+            <div class="feedback">
+                <div> <u><i>Given By:</i></u> {{feedback.0}} {{feedback.1}} </div>
+                <div> <u><i>Feedback:</i></u> {{feedback.2}} </div>
+                <div> <u><i>Given At:</i></u> {{feedback.3}} </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <div>
+            <button class="submitBtn" onclick="handleEndTask(event)" data-taskid={{task.0}} data-pid={{pid}}>End
+                Task</button>
+        </div>
+        <div>
+            <button class="submitBtn" onclick="handleSendReminder(event)" data-taskid={{task.0}} data-pid={{pid}}>Send
+                Reminder</button>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+{% endif %}
+
+
+
+<!-- FOR MANAGER -->
+
+{% if isManager and not task.12 %}
+
+{% csrf_token %}
+<div class="manage-task-content-container">
+    <div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_label">label:</label>
+                <div>
+                    <input type="text" name="label" placeholder="enter task label" maxlength="20" required=""
+                        id="id_label" value='{{task.1}}'>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_desc">Description:</label>
+                <div>
+                    <textarea class="lotOfWriting" cols=50 rows=50 name="desc" placeholder="describe the task"
+                        required="" id="id_desc">{{task.2}}</textarea>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_deadline">Deadline:</label>
+                <div>
+                    <input type="datetime-local" name="deadline" required="" id="id_deadline" value={{task.3}}>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_urgency">Urgency:</label>
+                <div>
+                    <input type="text" name="urgency" required="" id="id_urgency" value={{task.4}}>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex2">
+                <label class="form-label" for="id_category">Category:</label>
+                <div>
+                    <input type="text" name="category" required="" id="id_category" oninput="handleShowCats(event)"
+                        data-pid={{pid}}>
+                    <div id="searchRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex1">
+                <label class="form-label" for="id_assigned_to">Assign to:</label>
+                <div>
+                    <input type="text" name="assigned_to" required="" id="id_assigned_to"
+                        oninput="handleShowUsers(event)" data-pid={{pid}}>
+                    <div id="searchUserRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-input showCats zindex1">
+                <label class="form-label" for="id_dependent_on">Dependant On :</label>
+                <div>
+                    <input type="text" name="dependent_on" required="" id="id_dependent_on"
+                        oninput="handleShowTasks(event)" data-pid={{pid}} data-taskid={{task.0}}>
+                    <div id="searchTaskRes">
+                        <!-- DATA WILL BE INSERTED VIA JS -->
+                    </div>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- rightside -->
+    <div>
+        <form action="/feedback/{{pid}}/{{task.0}}" method="POST">
+            {% csrf_token %}
+            <div class="form-input">
+                <label class="form-label" for="id_feedback">Feedback:</label>
+                <div>
+                    <textarea class="lotOfWriting" cols=50 rows=50 name="feedback" placeholder="Give Feedback"
+                        required="" id="id_feedback"></textarea>
+                    <input type="submit" class="saveBtn" value="Save">
+                </div>
+            </div>
+        </form>
+
+        <div class="infoview"> <u>Dependant on</u> :
+            {% for superior in dependencies %}
+            <a class="blue-font" href="{% url 'managetask' pid=pid taskid=superior.0 %}">#{{ superior.0 }} </a>
+            {% endfor %}
+        </div>
+        <div class="infoview"> <u>Superior To</u> :
+            {% for subordinate in superior_to %}
+            <a class="blue-font" href="{% url 'managetask' pid=pid taskid=subordinate.0 %}">#{{ subordinate.0 }} </a>
+            {% endfor %}
+        </div>
+
+        <div class="infoview feedback-container">
+            <span class="bold">Feedbacks -</span>
+
+            {% for feedback in feedbacks %}
+            <div class="feedback">
+                <div> <u><i>Given By:</i></u> {{feedback.0}} {{feedback.1}} </div>
+                <div> <u><i>Feedback:</i></u> {{feedback.2}} </div>
+                <div> <u><i>Given At:</i></u> {{feedback.3}} </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <div>
+            <button class="submitBtn" onclick="handleEndTask(event)" data-taskid={{task.0}} data-pid={{pid}}>End
+                Task</button>
+        </div>
+        <div>
+            <button class="submitBtn" onclick="handleSendReminder(event)" data-taskid={{task.0}} data-pid={{pid}}>Send
+                Reminder</button>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+{% endif %}
+
+
+<!-- for employee -->
+{% if isEmployee and not task.12 %}
+<div class="taskview">
+    <div class="id bold">#{{task.0}}</div>
+    <div> <u>Label</u> : {{task.1}}</div>
+    <div> <u>Description</u> : {{task.2}}</div>
+    <div> <u>Deadline</u> : {{task.3}}</div>
+    <div> <u>Urgency</u> : {{task.4}}</div>
+    <div> <u>Created At</u> : {{task.5}}</div>
+    <div> <u>Category</u> : {{task.7}}</div>
+    <div> <u>Managed By</u> : {{task.8}}</div>
+    <div> <u>Created By</u> : {{task.9}}</div>
+    <div> <u>Dependant on</u> :
+        {% for superior in dependencies %}
+        <a class="blue-font" href="{% url 'managetask' pid=pid taskid=superior.0 %}">#{{ superior.0 }} </a>
+        {% endfor %}
+    </div>
+    <div> <u>Superior To</u> :
+        {% for subordinate in superior_to %}
+        <a class="blue-font" href="{% url 'managetask' pid=pid taskid=subordinate.0 %}">#{{ subordinate.0 }} </a>
+        {% endfor %}
+    </div>
+
+    <div class="infoview feedback-container">
+        <span class="bold">Feedbacks -</span>
+        {% for feedback in feedbacks %}
+        <div class="feedback">
+            <div> <u><i>Given By:</i></u> {{feedback.0}} {{feedback.1}} </div>
+            <div> <u><i>Feedback:</i></u> {{feedback.2}} </div>
+            <div> <u><i>Given At:</i></u> {{feedback.3}} </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <div><button class="submitBtn" onclick="handleSubmitTask(event)" data-taskid={{task.0}} data-pid={{pid}}>Submit
+            Task</button></div>
+
+</div>
+{% endif %}
+
+
+<!-- for ended tasks -->
+{% if task.12 %}
+<div class="taskview">
+    <div class="id bold">#{{task.0}}</div>
+    <div> <u>Label</u> : {{task.1}}</div>
+    <div> <u>Description</u> : {{task.2}}</div>
+    <div> <u>Deadline</u> : {{task.3}}</div>
+    <div> <u>Urgency</u> : {{task.4}}</div>
+    <div> <u>Created At</u> : {{task.5}}</div>
+    <div> <u>Category</u> : {{task.7}}</div>
+    <div> <u>Managed By</u> : {{task.8}}</div>
+    <div> <u>Created By</u> : {{task.9}}</div>
+    <div> <u>Dependant on</u> :
+        {% for superior in dependencies %}
+        <a class="blue-font" href="{% url 'managetask' pid=pid taskid=superior.0 %}">#{{ superior.0 }} </a>
+        {% endfor %}
+    </div>
+    <div> <u>Superior To</u> :
+        {% for subordinate in superior_to %}
+        <a class="blue-font" href="{% url 'managetask' pid=pid taskid=subordinate.0 %}">#{{ subordinate.0 }} </a>
+        {% endfor %}
+    </div>
+
+    <div class="infoview feedback-container">
+        <span class="bold">Feedbacks -</span>
+
+        {% for feedback in feedbacks %}
+        <div class="feedback">
+            <div> <u><i>Given By:</i></u> {{feedback.0}} {{feedback.1}} </div>
+            <div> <u><i>Feedback:</i></u> {{feedback.2}} </div>
+            <div> <u><i>Given At:</i></u> {{feedback.3}} </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <u>Completed At</u> : {{task.6}}
+    </div>
+
+
+</div>
+{% endif %}
+
+{% if error_msg %}
+<div id="error-msg">{{error_msg}}</div>
+{% endif %}
+</form>
+
+<script src="{% static 'js/create_task.js' %}"></script>
+{% endblock %}

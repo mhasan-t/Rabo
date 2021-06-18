@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+
+<div class="titleBar">
+    <button id="backBtn"><a href="{% url 'showtasks' pid=pid %}"> <img src="{% static 'logos/back.png' %}" alt=""> </a>
+    </button>
+    <h1>{{ task.1 }}/Create new task</h1>
+</div>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="form-input">
+        <label class="form-label" for="id_label">label:</label>
+        <input type="text" name="label" placeholder="enter task label" maxlength="20" required="" id="id_label">
+    </div>
+
+    <div class="form-input">
+        <label class="form-label" for="id_desc">Description:</label>
+        <textarea class="lotOfWriting" cols='50' rows='50' name="desc" placeholder="describe the task" required=""
+            id="id_desc"></textarea>
+    </div>
+
+    <div class="form-input">
+        <label class="form-label" for="id_deadline">Deadline:</label>
+        <input type="datetime-local" name="deadline" required="" id="id_deadline">
+    </div>
+
+    <div class="form-input">
+        <label class="form-label" for="id_urgency">Urgency:</label>
+        <input type="text" name="urgency" required="" id="id_urgency">
+    </div>
+
+    <div class="form-input showCats zindex2">
+        <label class="form-label" for="id_category">Category:</label>
+        <input type="text" name="category" required="" id="id_category" oninput="handleShowCats(event)" data-pid={{pid}}
+            autocomplete="off">
+        <div id="searchRes">
+            <!-- DATA WILL BE INSERTED VIA JS -->
+        </div>
+    </div>
+
+    <div class="form-input showCats zindex1">
+        <label class="form-label" for="id_assigned_to">Assign to:</label>
+        <input type="text" name="assigned_to" required="" id="id_assigned_to" oninput="handleShowUsers(event)"
+            data-pid={{pid}} autocomplete="off">
+        <div id="searchUserRes">
+            <!-- DATA WILL BE INSERTED VIA JS -->
+        </div>
+    </div>
+
+
+    <div class="form-input">
+        <input type="submit" id="submitBtn" class="submitBtn" value="Create New Task">
+    </div>
+</form>
+{% if error_msg %}
+<div id="error-msg">{{error_msg}}</div>
+{% endif %}
+</form>
+
+<script src="{% static 'js/create_task.js' %}"></script>
+{% endblock %}

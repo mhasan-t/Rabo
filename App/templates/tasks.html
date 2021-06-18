@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tasks.css' %}">
+
+{% if isSuper %}
+<button class="yesBtn"><a href="{% url 'createtask' pid=pid %}">New Task</a></button>
+{% endif %}
+
+<div class="tasks-container">
+
+    {% if isSuper %}
+    {% for task_container in tasks %}
+    <div class="category-col">
+        <div class="cat">{{task_container.0}}</div>
+
+        {% for task in task_container.1 %}
+        <div class="task" data-task-id={{ task.0 }}>
+            <div class="id">#{{ task.0 }}</div>
+            <div class="name">{{ task.1 }}</div>
+            <!-- <div class="desc">{{ task.2 }}</div> -->
+            <div class="deadline"><i>Deadline</i> : <br>{{ task.3 }}</div>
+            <div class="urgency"><i>Urgency :</i> <br>{{ task.4 }}</div>
+            <button class="infoBtn"><a href="{% url 'managetask' pid=pid taskid=task.0 %}">More Options</a></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+    {% if not isSuper %}
+    {% for task_container in tasks %}
+    <div class="category-col">
+        <div class="cat">{{task_container.0}}</div>
+
+        {% for task in task_container.1 %}
+
+        {% if task.12 %}
+        <div class="task" data-task-id={{ task.0 }}>
+            <div class="id">#{{ task.0 }}</div>
+            <div class="name">{{ task.1 }}</div>
+            <!-- <div class="desc">{{ task.2 }}</div> -->
+            <div class="deadline"><i>Deadline</i> : <br>{{ task.3 }}</div>
+            <div class="urgency"><i>Urgency :</i> <br>{{ task.4 }}</div>
+            <button class="infoBtn"><a href="{% url 'managetask' pid=pid taskid=task.0 %}">More Options</a></button>
+        </div>
+        {% endif %}
+
+
+        {% endfor %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}

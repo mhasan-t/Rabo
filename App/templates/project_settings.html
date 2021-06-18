@@ -35,7 +35,7 @@
                 <label class="form-label" for="id_name">Name:</label>
                 <div>
                     <input type="text" name="name" placeholder="enter project name" maxlength="30" required=""
-                        id="id_name" value={{p.1}}>
+                        id="id_name" value='{{p.1}}'>
                     <input type="button" class="submitBtn" data-id="{{p.0}}" value="Save" onclick="updateProj(event)">
                 </div>
             </div>
@@ -45,6 +45,14 @@
                 <div>
                     <textarea rows=4 name="desc" placeholder="description..." maxlength="255" required=""
                         id="id_desc">{{p.2}}</textarea>
+                    <input type="button" class="submitBtn" data-id="{{p.0}}" value="Save" onclick="updateProj(event)">
+                </div>
+            </div>
+
+            <div class="form-input">
+                <label class="form-label" for="id_deadline">Deadline :</label>
+                <div>
+                    <input type="datetime-local" name="deadline" required="" id="id_deadline">
                     <input type="button" class="submitBtn" data-id="{{p.0}}" value="Save" onclick="updateProj(event)">
                 </div>
             </div>
